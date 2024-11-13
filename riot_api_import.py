@@ -115,29 +115,21 @@ def save_match_data(match_data, connection):
         connection.commit()
 
 # Função principal para obter dados da partida e salvar no banco de dados
-def main():
-    # Substitua com seu Match ID e token de API da Riot Games
-    match_id = "EXEMPLO_DE_MATCH_ID"
-    api_token = "SUA_API_KEY"
-    url = f"https://REGION.api.riotgames.com/lol/match/v5/matches/{match_id}"
-    
-    headers = {"X-Riot-Token": api_token}
-    response = requests.get(url, headers=headers)
+def fetch_and_save_match_data(api_token):
+    match_id = "BR1_2970146077" 
+    url = f"https://americas.api.riotgames.com/lol/match/v5/matches/{match_id}?api_key=" + api_token
+    response = requests.get(url)
 
     if response.status_code == 200:
         match_data = response.json()
-
-        # Conectando ao banco de dados e criando tabelas se não existirem
         connection = connect_db()
-        create_tables(connection)
-
-        # Salvando dados no banco de dados
         save_match_data(match_data, connection)
         connection.close()
-
         print("Dados salvos com sucesso no banco de dados!")
     else:
         print(f"Erro ao obter dados: {response.status_code} - {response.text}")
 
+# Exemplo de uso
 if __name__ == "__main__":
-    main()
+    api_token = "RGAPI-68a58d02-3ffe-45c6-9730-80db4a20eb98"
+    fetch_and_save_match_data(api_token)
