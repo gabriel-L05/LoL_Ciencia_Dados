@@ -1,54 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualização de Partidas</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+    <title>Modelo Dashboard</title>
 </head>
+
 <body>
-    <h1>Informações das Partidas</h1>
-    <table id="match-table">
-        <thead>
-            <tr>
-                <th>Match ID</th>
-                <th>Duração</th>
-                <th>Modo de Jogo</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-
-    <script>
-        fetch('http://127.0.0.1:5000/matches')
-    .then(response => response.json())
-    .then(data => {
-        const tableBody = document.querySelector('#match-table tbody');
-        data.forEach(match => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${match.match_id}</td>
-                <td>${match.game_duration}</td>
-                <td>${match.game_mode}</td>
-            `;
-            tableBody.appendChild(row);
-        });
-    })
-    .catch(error => console.error('Erro ao carregar os dados:', error));
-
-    </script>
+    <main>
+        <div class="page-wrapper">
+            <div class="page-container">
+                <div class="side-bar">
+                    <div>
+                        <span id="dashboard" onclick="setActive(this, 'page-dashboard')"
+                            class="animated-underline">Dashboard</span>
+                    </div>
+                    <div>
+                        <span id="relatorios" onclick="setActive(this, 'page-relatorio')"
+                            class="animated-underline">Relatórios</span>
+                    </div>
+                    <div>
+                        <span id="historico" onclick="setActive(this, 'page-historico')"
+                            class="animated-underline">Histórico</span>
+                    </div>
+                    <div>
+                        <span id="informacoes" onclick="setActive(this, 'page-informacoes')"
+                            class="animated-underline">Informações</span>
+                    </div>
+                </div>
+                <div class="tabs show" id="page-dashboard">
+                    <div class="container-cards">
+                        <h1>Dashboard</h1>
+                        <div class="content-cards">
+                            <h1>Informações das Partidas</h1>
+                            <table id="match-table">
+                                <thead>
+                                    <tr>
+                                        <th>Match ID</th>
+                                        <th>Duração</th>
+                                        <th>Modo de Jogo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tabs" id="page-relatorio">
+                    <div class="container-cards">
+                        <h1>Relatório</h1>
+                    </div>
+                </div>
+                <div class="tabs" id="page-historico">
+                    <div class="container-cards">
+                        <h1>Histórico</h1>
+                    </div>
+                </div>
+                <div class="tabs" id="page-informacoes">
+                    <div class="container-cards">
+                        <h1>Informações</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 </body>
+
 </html>
+
+<script>
+    fetch('http://127.0.0.1:5000/matches')
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.querySelector('#match-table tbody');
+            data.forEach(match => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+            <td>${match.match_id}</td>
+            <td>${match.game_duration}</td>
+            <td>${match.game_mode}</td>
+        `;
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(error => console.error('Erro ao carregar os dados:', error));
+
+</script>
