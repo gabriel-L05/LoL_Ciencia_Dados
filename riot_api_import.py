@@ -10,6 +10,30 @@ db_config = {
     "database": "LolData"
 }
 
+matchsArr = [
+    "BR1_3012794999",
+    "BR1_3010077527",
+    "BR1_3010065895",
+    "BR1_3009395432",
+    "BR1_3009341820",
+    "BR1_3009332055",
+    "BR1_3009317024",
+    "BR1_2971372276",
+    "BR1_2970146077",
+    "BR1_2966272252",
+    "BR1_2966191640",
+    "BR1_2966148903",
+    "BR1_2966106061",
+    "BR1_2964558246",
+    "BR1_2964519062",
+    "BR1_2960958029",
+    "BR1_2960920938",
+    "BR1_2960901947",
+    "BR1_2960259472",
+    "BR1_2960245756"
+]
+
+
 # Função para conectar ao banco de dados MySQL
 def connect_db():
     return pymysql.connect(
@@ -116,18 +140,20 @@ def save_match_data(match_data, connection):
 
 # Função principal para obter dados da partida e salvar no banco de dados
 def fetch_and_save_match_data(api_token):
-    match_id = "BR1_2970146077" 
-    url = f"https://americas.api.riotgames.com/lol/match/v5/matches/{match_id}?api_key=" + api_token
-    response = requests.get(url)
+    
+    for match_id in matchsArr:
 
-    if response.status_code == 200:
-        match_data = response.json()
-        connection = connect_db()
-        save_match_data(match_data, connection)
-        connection.close()
-        print("Dados salvos com sucesso no banco de dados!")
-    else:
-        print(f"Erro ao obter dados: {response.status_code} - {response.text}")
+        url = f"https://americas.api.riotgames.com/lol/match/v5/matches/{match_id}?api_key=" + api_token
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            match_data = response.json()
+            connection = connect_db()
+            save_match_data(match_data, connection)
+            connection.close()
+            print("Dados salvos com sucesso no banco de dados!")
+        else:
+            print(f"Erro ao obter dados: {response.status_code} - {response.text}")
 
 # Exemplo de uso
 if __name__ == "__main__":
