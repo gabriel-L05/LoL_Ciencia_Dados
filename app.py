@@ -49,5 +49,18 @@ def get_participants():
     finally:
         connection.close()
 
+@app.route('/gold-vision')
+def get_gold_vision_data():
+    connection = connect_db()
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT summoner_name, gold_earned, total_damage_dealt
+            FROM participants
+            WHERE team_position != '' and match_id = 'BR1_2960245756'
+        """)
+        data = cursor.fetchall()
+    connection.close()
+    return jsonify(data)
+
 if __name__ == '__main__':
     app.run(debug=True)

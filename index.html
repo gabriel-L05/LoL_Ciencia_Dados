@@ -65,6 +65,11 @@
                     <div class="container-cards">
                         <h1>Histórico</h1>
                     </div>
+                    <div class="content-card">
+                        <h1>Gráfico Scatter de Ouro Ganho vs Pontuação de Visão</h1>
+                        <canvas id="goldVisionChart" width="400" height="400"></canvas>
+
+                    </div>
                 </div>
                 <div class="tabs" id="page-informacoes">
                     <div class="container-cards">
@@ -144,6 +149,65 @@
                     scales: {
                         y: {
                             beginAtZero: true
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => console.error('Erro ao carregar os dados:', error));
+</script>
+
+
+<script>
+    // Requisição para a API para buscar os dados de ouro e visão
+    fetch('http://127.0.0.1:5000/gold-vision')
+        .then(response => response.json())
+        .then(data => {
+            // Preparando os dados para o gráfico scatter
+            const scatterData = data.map(player => ({
+                x: player.gold_earned,
+                y: player.total_damage_dealt,
+                label: player.summoner_name
+            }));
+
+            // Configurando o gráfico
+            const ctx = document.getElementById('goldVisionChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Ouro vs Dano',
+                        data: scatterData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            title: {
+                                display: true,
+                                text: 'Ouro Ganho'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Dano'
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return `${context.raw.label}: Ouro (${context.raw.x}), Visão (${context.raw.y})`;
+                                }
+                            }
                         }
                     }
                 }
