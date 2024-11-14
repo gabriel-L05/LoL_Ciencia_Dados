@@ -43,7 +43,7 @@ def get_participants():
     connection = connect_db()
     try:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM participants")
+            cursor.execute("SELECT * FROM participants WHERE match_id like '%BR1_2960245756%' ")
             result = cursor.fetchall()
             return jsonify(result)
     finally:

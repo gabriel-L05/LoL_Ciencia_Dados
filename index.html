@@ -54,6 +54,11 @@
                 <div class="tabs" id="page-relatorio">
                     <div class="container-cards">
                         <h1>Relatório</h1>
+                        <div class="content-cards">
+
+                            <h1>Gráfico de Kills, Deaths e Assists</h1>
+                            <canvas id="playerChart" width="400" height="200"></canvas>
+                        </div>
                     </div>
                 </div>
                 <div class="tabs" id="page-historico">
@@ -90,4 +95,59 @@
         })
         .catch(error => console.error('Erro ao carregar os dados:', error));
 
+</script>
+
+
+<script>
+    // Requisição para a API para buscar os dados
+    fetch('http://127.0.0.1:5000/participants')
+        .then(response => response.json())
+        .then(data => {
+            // Extraindo os dados necessários para o gráfico
+            const labels = data.map(player => player.summoner_name);
+            const kills = data.map(player => player.kills);
+            const deaths = data.map(player => player.deaths);
+            const assists = data.map(player => player.assists);
+
+            // Configurando o gráfico
+            const ctx = document.getElementById('playerChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Kills',
+                            data: kills,
+                            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Deaths',
+                            data: deaths,
+                            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Assists',
+                            data: assists,
+                            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => console.error('Erro ao carregar os dados:', error));
 </script>
