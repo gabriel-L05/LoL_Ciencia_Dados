@@ -189,13 +189,13 @@ def plot_matches_by_region(matches_df):
 
 
 # Chama a função para gerar o gráfico
-# plot_matches_by_region(matches_df)
-# plot_kda_by_champion(players_df)
-# plot_game_duration_histogram(matches_df)
-# plot_win_by_side(matches_df)
-# plot_kills_by_champion(players_df)
-# plot_gold_vs_damage(players_df)
+plot_matches_by_region(matches_df)
+plot_kda_by_champion(players_df)
+plot_game_duration_histogram(matches_df)
+plot_win_by_side(matches_df)
+plot_kills_by_champion(players_df)
+plot_gold_vs_damage(players_df)
 plot_champion_winrates(players_df)
 
-# best_champions_table = best_champion_by_player(players_df)
-# print(best_champions_table)
+best_champions_table = best_champion_by_player(players_df)
+print(best_champions_table)
