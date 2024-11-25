@@ -5,15 +5,15 @@ import seaborn as sns
 import numpy as np
 
 conn = mysql.connector.connect(
-    host='localhost',      
+    host='localhost',     
     user='root',          
-    password='',           
-    database='LolData'    
+    password='',          
+    database='LolData'     
 )
 
 def fetch_data():
-    matches_query = "SELECT * FROM matches"
-    players_query = "SELECT * FROM player_stats"
+    matches_query = "SELECT B.* FROM player_stats A INNER JOIN matches B ON A.match_id = B.match_id WHERE summoner_name IN ('Ahrice in Chains', 'Le0w20', 'BOBALHÃO123', 'costelão', 'mubarrigao', 'Pedrin1Minecraft', 'Lassengg');"
+    players_query = "SELECT * FROM player_stats WHERE summoner_name IN ('Ahrice in Chains', 'Le0w20', 'BOBALHÃO123', 'costelão', 'mubarrigao', 'Pedrin1Minecraft', 'Lassengg');"
     
     matches_df = pd.read_sql(matches_query, conn)
     players_df = pd.read_sql(players_query, conn)
@@ -56,7 +56,6 @@ def plot_gold_vs_damage(players_df):
     plt.legend(title='Vitória', labels=['Derrota', 'Vitória'])
     plt.show()
 
-
 def plot_champion_winrates(players_df, min_games=15):
     champion_stats = players_df.groupby('champion').agg(
         total_games=('win', 'count'),
@@ -85,25 +84,6 @@ def plot_champion_winrates(players_df, min_games=15):
     plt.tight_layout()
     plt.show()
 
-
-def best_champion_by_player(players_df, min_games=5):
-   
-    player_champion_stats = players_df.groupby(['summoner_name',]).agg(
-        total_games=('win', 'count'),
-        winrate=('win', 'mean')
-    ).reset_index()
-    
-    player_champion_stats = player_champion_stats[player_champion_stats['total_games'] >= min_games]
-    
-    best_champions = player_champion_stats.loc[
-        player_champion_stats.groupby('summoner_name')['winrate'].idxmax()
-    ]
-    
-    best_champions = best_champions.sort_values(by='winrate', ascending=False)
-
-    return best_champions[['summoner_name', 'champion', 'winrate', 'total_games']]
-
-
 def plot_kda_by_champion(players_df, min_games=10):
 
     kda_stats = players_df.groupby('champion').agg(
@@ -131,6 +111,7 @@ def plot_kda_by_champion(players_df, min_games=10):
     plt.tight_layout()
     plt.show()
 
+
 def plot_game_duration_histogram(matches_df):
     import matplotlib.pyplot as plt
 
@@ -142,8 +123,6 @@ def plot_game_duration_histogram(matches_df):
     plt.grid(axis='y', linestyle='--', alpha=0.7)
     plt.show()
 
-import matplotlib.pyplot as plt
-import pandas as pd
 
 def plot_matches_by_region(matches_df):
     matches_df['region'] = matches_df['match_id'].str[:2] 
@@ -168,4 +147,3 @@ plot_win_by_side(matches_df)
 plot_kills_by_champion(players_df)
 plot_gold_vs_damage(players_df)
 plot_champion_winrates(players_df)
-

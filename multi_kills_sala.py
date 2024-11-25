@@ -1,10 +1,8 @@
 import matplotlib.pyplot as plt
-import seaborn as sns
-import pandas as pd
 import mysql.connector
 
 conn = mysql.connector.connect(
-    host='localhost',
+    host='localhost',  
     user='root',
     password='', 
     database='LolData'
@@ -13,7 +11,7 @@ cursor = conn.cursor()
 
 cursor.execute('''
     SELECT SUM(penta_kills), SUM(quadra_kills), SUM(triple_kills)
-    FROM player_stats
+    FROM player_stats WHERE summoner_name IN ('Ahrice in Chains', 'Le0w20', 'BOBALHÃO123', 'costelão', 'mubarrigao', 'Pedrin1Minecraft', 'Lassengg');
 ''')
 
 result = cursor.fetchone()
@@ -29,11 +27,27 @@ plt.ylabel('Quantidade')
 
 plt.show()
 
+conn.close()
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+import mysql.connector
+
+conn = mysql.connector.connect(
+    host="localhost",  
+    user="root",      
+    password="",      
+    database="LolData" 
+)
+cursor = conn.cursor()
+
 query = '''
     SELECT champion, SUM(penta_kills) AS penta_kills,
            SUM(quadra_kills) AS quadra_kills,
            SUM(triple_kills) AS triple_kills
-    FROM player_stats
+    FROM player_stats 
+    WHERE summoner_name IN ('Ahrice in Chains', 'Le0w20', 'BOBALHÃO123', 'costelão', 'mubarrigao', 'Pedrin1Minecraft', 'Lassengg')
     GROUP BY champion
     HAVING SUM(penta_kills) > 0 OR SUM(quadra_kills) > 0 OR SUM(triple_kills) > 0
     ORDER BY penta_kills DESC, quadra_kills DESC, triple_kills DESC
@@ -74,4 +88,3 @@ plt.xticks(rotation=90)
 plt.ylabel('Number of Triple Kills')
 plt.tight_layout()
 plt.show()
-

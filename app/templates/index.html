@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>League of Legends Statistics</h1>
+
+<!-- Tabela 1: Piores Jogadores por Win Rate -->
+<h2>Top 10 Piores Jogadores por Win Rate</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Summoner Name</th>
+            <th>Win Rate (%)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for player in worst_win_rate_players %}
+        <tr>
+            <td>{{ player.summoner_name }}</td>
+            <td>{{ player.win_rate | round(2) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Tabela 2: Piores Jogadores por KDA -->
+<h2>Top 10 Piores Jogadores por KDA</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Summoner Name</th>
+            <th>KDA</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for player in worst_kda_players %}
+        <tr>
+            <td>{{ player.summoner_name }}</td>
+            <td>{{ player.kda | round(2) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Gráfico 1: Piores Jogadores por Mortes -->
+<h2>Gráfico: Top 10 Jogadores com Mais Mortes</h2>
+<div id="deaths_graph" style="width: 100%; height: 500px;"></div>
+
+<!-- Tabela: Campeões Mais Escolhidos e Suas Win Rates -->
+<h2>Campeões Mais Escolhidos e Suas Win Rates</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Campeão</th>
+            <th>Jogos Jogados</th>
+            <th>Win Rate (%)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for champion in champion_winrates %}
+        <tr>
+            <td>{{ champion.champion }}</td>
+            <td>{{ champion.games_played }}</td>
+            <td>{{ champion.win_rate | round(2) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<!-- Tabela: Ranking de Mortes por Partida -->
+<h2>Ranking de Partidas com Mais Mortes por Jogador</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Jogador</th>
+            <th>Campeão</th>
+            <th>Kills/Mortes/Assistências</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entry in death_ranking %}
+        <tr>
+            <td>{{ entry.summoner_name }}</td>
+            <td>{{ entry.champion }}</td>
+            <td>{{ entry.kda }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<!-- Tabela: Ranking de Jogadores com Menor Dano Causado -->
+<h2>Ranking de Jogadores com Menor Dano Causado</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Jogador</th>
+            <th>Campeão</th>
+            <th>Dano Total</th>
+            <th>Kill/Mortes/Assistências</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entry in lowest_damage_players %}
+        <tr>
+            <td>{{ entry.summoner_name }}</td>
+            <td>{{ entry.champion }}</td>
+            <td>{{ entry.total_damage }}</td>
+            <td>{{ entry.kills_deaths_assists }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    var deathsGraphData = {{ worst_matches | safe }};
+    Plotly.newPlot('deaths_graph', deathsGraphData.data, deathsGraphData.layout);
+
+</script>
+{% endblock %}
