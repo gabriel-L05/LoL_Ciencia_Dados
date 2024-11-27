@@ -121,6 +121,7 @@ def save_match_data(match_id, match_data):
                             player['allInPings'], 
                             player['win']))
         conn.commit()
+        print('Dados salvos')
     except Exception as e:
         print(f'Erro ao salvar dados da partida {match_id}: {e}')
 
@@ -132,7 +133,7 @@ def collect_and_store_data(game_name, tag_line, region, num_matches=100):
         for match_id in matches:
             match_data = get_match_details(match_id, region)
             save_match_data(match_id, match_data)
-            print('Dados salvos')
+            
             time.sleep(1.2)  
 
 players = [

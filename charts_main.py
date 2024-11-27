@@ -2,7 +2,6 @@ import mysql.connector
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import numpy as np
 
 conn = mysql.connector.connect(
     host='localhost',      
@@ -86,24 +85,6 @@ def plot_champion_winrates(players_df, min_games=15):
     plt.show()
 
 
-def best_champion_by_player(players_df, min_games=5):
-   
-    player_champion_stats = players_df.groupby(['summoner_name',]).agg(
-        total_games=('win', 'count'),
-        winrate=('win', 'mean')
-    ).reset_index()
-    
-    player_champion_stats = player_champion_stats[player_champion_stats['total_games'] >= min_games]
-    
-    best_champions = player_champion_stats.loc[
-        player_champion_stats.groupby('summoner_name')['winrate'].idxmax()
-    ]
-    
-    best_champions = best_champions.sort_values(by='winrate', ascending=False)
-
-    return best_champions[['summoner_name', 'champion', 'winrate', 'total_games']]
-
-
 def plot_kda_by_champion(players_df, min_games=10):
 
     kda_stats = players_df.groupby('champion').agg(
@@ -132,7 +113,6 @@ def plot_kda_by_champion(players_df, min_games=10):
     plt.show()
 
 def plot_game_duration_histogram(matches_df):
-    import matplotlib.pyplot as plt
 
     plt.figure(figsize=(10, 6))
     plt.hist(matches_df['game_duration'] / 60, bins=15, color='orange', edgecolor='black')
@@ -141,9 +121,6 @@ def plot_game_duration_histogram(matches_df):
     plt.ylabel('Número de Partidas')
     plt.grid(axis='y', linestyle='--', alpha=0.7)
     plt.show()
-
-import matplotlib.pyplot as plt
-import pandas as pd
 
 def plot_matches_by_region(matches_df):
     matches_df['region'] = matches_df['match_id'].str[:2] 
